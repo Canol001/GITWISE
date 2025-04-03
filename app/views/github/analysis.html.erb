@@ -14,6 +14,12 @@
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
     }
+    /* Hover effect for cards */
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -49,20 +55,18 @@
             </div>
           </div>
 
-          <!-- Additional Data -->
-          <div class="mt-6">
-            <h3 class="text-xl font-semibold text-blue-600">Recent Repositories</h3>
-            <div class="space-y-4">
-              <% @github_data['repos']&.each do |repo| %>
-                <div class="bg-gray-50 p-4 rounded shadow-sm">
-                  <p><strong>Repository Name:</strong> <%= repo['name'] %></p>
-                  <p><strong>Description:</strong> <%= repo['description'] || 'No description available' %></p>
-                  <p><strong>Stars:</strong> <%= repo['stargazers_count'] %></p>
-                  <p><strong>Forks:</strong> <%= repo['forks_count'] %></p>
-                  <a href="<%= repo['html_url'] %>" target="_blank" class="text-blue-500 hover:text-blue-700">View Repository</a>
-                </div>
-              <% end %>
-            </div>
+          <!-- Repository List as Cards in a Grid Layout -->
+          <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <% @github_data['repos']&.each do |repo| %>
+              <div class="card bg-white p-6 rounded-lg shadow-md fade-in hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105">
+                <h3 class="text-xl font-semibold text-blue-600"><%= repo['name'] %></h3>
+                <p class="text-gray-700 mt-2"><strong>Description:</strong> <%= repo['description'] || 'No description available' %></p>
+                <p class="text-gray-500 mt-2"><strong>Stars:</strong> <%= repo['stargazers_count'] %></p>
+                <p class="text-gray-500"><strong>Forks:</strong> <%= repo['forks_count'] %></p>
+                <p class="text-gray-500 mb-4"><strong>Primary Language:</strong> <%= repo['language'] || 'N/A' %></p>
+                <a href="<%= repo['html_url'] %>" target="_blank" class="text-blue-500 hover:text-blue-700">View Repository</a>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>

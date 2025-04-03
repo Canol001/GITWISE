@@ -1,25 +1,21 @@
-require 'net/http'
-require 'json'
-require 'uri'
-
 class GithubController < ApplicationController
-  # Show the analysis page
-  def analysis
-  end
+  require 'net/http'
+  require 'json'
 
-  # Fetch GitHub data from GitHub API
   def fetch_data
     username = params[:username]
-    uri = URI("https://api.github.com/users/#{username}")
-    response = Net::HTTP.get(uri)
-    github_data = JSON.parse(response)
+    url = "https://api.github.com/users/#{username}"
 
-    if github_data['message'] == 'Not Found'
-      flash[:alert] = "GitHub user not found. Please check the username."
-      redirect_to action: 'analysis'
-    else
-      @github_data = github_data
-      render :analysis
-    end
+    # Make a request to GitHub API
+    uri = URI(url)
+    response = Net::HTTP.get(uri)
+    @github_data = JSON.parse(response)
+
+    # Fetch repositories
+    repos_url = @github_data['repos_url']
+    repos_response = Net::HTTP.get(URI(repos_url))
+    @github_data['repos'] = JSON.parse(repos_response)
+
+    render :analysis
   end
 end
