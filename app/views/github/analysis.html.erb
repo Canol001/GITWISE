@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Analysis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Add custom animations */
+    .fade-in {
+      animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <div class="container mx-auto p-4">
+    <h1 class="text-4xl font-bold text-center text-blue-500 fade-in">GitHub User Analysis</h1>
+
+    <div class="mt-6 fade-in">
+      <!-- Form to enter GitHub username -->
+      <%= form_with url: '/github/fetch_data', method: :post, local: true do %>
+        <div class="flex justify-center">
+          <%= text_field_tag :username, nil, class: 'p-2 border border-gray-300 rounded', placeholder: 'Enter GitHub Username', required: true %>
+          <%= submit_tag 'Check', class: 'ml-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition duration-300' %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @github_data %>
+      <div class="mt-8 fade-in">
+        <h2 class="text-2xl font-semibold text-blue-600">User Information</h2>
+        <div class="bg-white p-4 rounded shadow-md">
+          <!-- User Avatar -->
+          <div class="flex items-center mb-4">
+            <img src="<%= @github_data['avatar_url'] %>" alt="User Avatar" class="w-16 h-16 rounded-full border-2 border-blue-500 mr-4">
+            <div>
+              <p><strong>Username:</strong> <%= @github_data['login'] %></p>
+              <p><strong>Name:</strong> <%= @github_data['name'] %></p>
+              <p><strong>Followers:</strong> <%= @github_data['followers'] %></p>
+              <p><strong>Repositories:</strong> <%= @github_data['public_repos'] %></p>
+              <p><strong>Bio:</strong> <%= @github_data['bio'] %></p>
+              <p><strong>Location:</strong> <%= @github_data['location'] || 'N/A' %></p>
+              <p><strong>Account Created On:</strong> <%= @github_data['created_at'] %></p>
+            </div>
+          </div>
+
+          <!-- Additional Data -->
+          <div class="mt-6">
+            <h3 class="text-xl font-semibold text-blue-600">Recent Repositories</h3>
+            <div class="space-y-4">
+              <% @github_data['repos']&.each do |repo| %>
+                <div class="bg-gray-50 p-4 rounded shadow-sm">
+                  <p><strong>Repository Name:</strong> <%= repo['name'] %></p>
+                  <p><strong>Description:</strong> <%= repo['description'] || 'No description available' %></p>
+                  <p><strong>Stars:</strong> <%= repo['stargazers_count'] %></p>
+                  <p><strong>Forks:</strong> <%= repo['forks_count'] %></p>
+                  <a href="<%= repo['html_url'] %>" target="_blank" class="text-blue-500 hover:text-blue-700">View Repository</a>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+</body>
+</html>
