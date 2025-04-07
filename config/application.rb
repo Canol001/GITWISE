@@ -11,10 +11,14 @@ module MyWebsite
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
 
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
-    # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
+    # Autoload and eager load the lib directory
+    config.autoload_paths << Rails.root.join("lib")
+    config.eager_load_paths << Rails.root.join("lib")
+
+    # If there are specific subdirectories inside lib that you want to ignore,
+    # consider organizing them outside lib or use Zeitwerk to ignore them explicitly:
+    # Rails.autoloaders.main.ignore(Rails.root.join("lib/assets"))
+    # Rails.autoloaders.main.ignore(Rails.root.join("lib/tasks"))
 
     # Configuration for the application, engines, and railties goes here.
     #
