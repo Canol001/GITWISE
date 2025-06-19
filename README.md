@@ -17,6 +17,7 @@ Things you may want to cover:
 
 * How to run the test suite
 
+#Ruby on rails
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
